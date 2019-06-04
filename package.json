@@ -1,0 +1,16 @@
+{
+  "name": "poe-reddit-to-discord",
+  "version": "1.0.0",
+  "description": "Submits Reddit posts by PoE community members to Discord",
+  "main": "src\\index.js",
+  "author": "merileyjr",
+  "license": "MIT",
+  "dependencies": {
+    "hookcord": "^2.0.1",
+    "reddit-snooper": "^1.0.1"
+  },
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "devDependencies": {}
+}
