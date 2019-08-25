@@ -64,7 +64,7 @@ subreddits.forEach(({ subreddit, monitor: { authors, webhooks } }) => {
             .setPayload(discordMessage)
             .fire()
             .then(function(response) {
-              console.log("response", response);
+              console.log("response valid!");
             })
             .catch(function(e) {})
         );
