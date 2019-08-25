@@ -1,0 +1,35 @@
+{
+  "credentials": {
+    "userAgent": "poe-reddit-to-discord",
+    "clientId": "",
+    "clientSecret": "",
+    "username": "",
+    "password": ""
+  },
+  "data": {
+    "subreddits": [
+      {
+        "subreddit": "pathofexile",
+        "monitor": {
+          "authors": [
+            "Natalia_GGG",
+            "Bex_GGG",
+            "chris_wilson",
+            "NeverSinkDev",
+            "Openarl"
+          ],
+          "webhooks": [
+            {
+              "title": "Bumper Stippers",
+              "url": ""
+            },
+            {
+              "title": "High Quality Gaming",
+              "url": ""
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
