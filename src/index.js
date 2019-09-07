@@ -1,7 +1,7 @@
 const Snooper = require("reddit-snooper");
 const hookcord = require("hookcord");
 const config = require("./config.json");
-const { get, map } = require("lodash");
+const { get, map, toLower } = require("lodash");
 
 const REDDIT_URL = "https://www.reddit.com";
 
@@ -30,56 +30,52 @@ subreddits.forEach(({ subreddit, monitor: { filters, webhooks } }) => {
   snooper.watcher
     .getPostWatcher(subreddit)
     .on("post", function(post) {
-      const {
-        data: { author, title, url, permalink, thumbnail }
-      } = post;
-      const hasAuthorMatch = filter(
-        get(filters, "author.exact"),
-        get(filters, "author.regex"),
-        author.toLowerCase()
-      );
-      const hasTitleMatch = filter(
-        get(filters, "title.exact"),
-        get(filters, "title.regex"),
-        title.toLowerCase()
-      );
+      if (get(post, "data")) {
+        const {
+          data: { author, title, url, permalink, thumbnail }
+        } = post;
+        const hasAuthorMatch = filter(
+          get(filters, "author.exact"),
+          get(filters, "author.regex"),
+          toLower(author)
+        );
+        const hasTitleMatch = filter(
+          get(filters, "title.exact"),
+          get(filters, "title.regex"),
+          toLower(title)
+        );
 
-      const discordMessage = {
-        content: `${REDDIT_URL}${permalink}`,
-        embeds: [
-          {
-            author: {
-              name: author
-            },
-            title,
-            url: `${REDDIT_URL}${permalink}`,
-            thumbnail: validURL(thumbnail)
-              ? {
-                  url: thumbnail
-                }
-              : undefined,
-            fields: [{ name: "Content:", value: url }]
-          }
-        ]
-      };
-      console.log(discordMessage);
+        const discordMessage = {
+          content: `${REDDIT_URL}${permalink}`,
+          embeds: [
+            {
+              author: {
+                name: author
+              },
+              title,
+              url: `${REDDIT_URL}${permalink}`,
+              thumbnail: validURL(thumbnail)
+                ? {
+                    url: thumbnail
+                  }
+                : undefined,
+              fields: [{ name: "Content:", value: url }]
+            }
+          ]
+        };
 
-      if (hasAuthorMatch || hasTitleMatch) {
-        notify(webhooks, discordMessage);
+        if (hasAuthorMatch || hasTitleMatch) {
+          notify(webhooks, discordMessage);
+        }
       }
     })
     .on("error", console.error);
 });
 
 function filter(exact, regex, target) {
-  console.log(exact, regex, target);
-  const exactMatch = map(
-    exact,
-    item => console.log(item.toLowerCase(), target) || item.toLowerCase()
-  ).includes(target);
+  const exactMatch = map(exact, item => toLower(item)).includes(target);
   const regexMatch = map(regex, rx => new RegExp(rx, "i")).reduce(
-    (acc, rx) =>
-      console.log(rx.test(target), target, rx) || acc || rx.test(target),
+    (acc, rx) => acc || rx.test(target),
     false
   );
 
